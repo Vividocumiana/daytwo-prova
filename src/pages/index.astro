@@ -8,8 +8,252 @@ const titolo = 'Sito di prova';
     <title>{titolo}</title>
   </head>
   <body style="font-family: system-ui, sans-serif; max-width: 640px; margin: 4rem auto; padding: 0 1rem;">
-    <h1>{titolo}</h1>
-    <p>Una pagina sola, per provare Daytwo.</p>
-    <a href="mailto:hello@example.com">Scrivici</a>
+    <section class="hero">
+      <h1>{titolo}</h1>
+      <p>Una pagina sola, per provare Daytwo.</p>
+      <a class="cta" href="mailto:hello@example.com">Scrivici</a>
+
+      <div class="visual" aria-hidden="true">
+        <div class="layer browser" data-depth="6">
+          <div class="bar">
+            <span></span><span></span><span></span>
+            <div class="url">daytwo-prova.vercel.app</div>
+          </div>
+          <div class="page">
+            <div class="line h"></div>
+            <div class="line"></div>
+            <div class="line short"></div>
+            <div class="btn"></div>
+            <div class="grid">
+              <div></div><div></div><div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layer chat" data-depth="14">
+          <div class="avatar"></div>
+          <p>Rendi la hero più bella</p>
+        </div>
+
+        <div class="layer status" data-depth="20">
+          <span class="dot"></span>
+          Anteprima pronta
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const visual = document.querySelector('.visual');
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const fine = window.matchMedia('(pointer: fine)').matches;
+      if (visual && !calm && fine) {
+        const layers = visual.querySelectorAll('[data-depth]');
+        visual.addEventListener('pointermove', (e) => {
+          const r = visual.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          layers.forEach((el) => {
+            const d = Number(el.dataset.depth);
+            el.style.translate = `${x * d}px ${y * d}px`;
+          });
+        });
+        visual.addEventListener('pointerleave', () => {
+          layers.forEach((el) => (el.style.translate = '0 0'));
+        });
+      }
+    </script>
+
+    <style>
+      .hero h1 {
+        margin-bottom: 0.5rem;
+      }
+      .hero > p {
+        margin: 0 0 1.5rem;
+      }
+      .cta {
+        display: inline-block;
+        padding: 0.6rem 1.25rem;
+        border-radius: 999px;
+        background: #0000ee;
+        color: #fff;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 200ms ease-out;
+      }
+      .cta:hover {
+        transform: translateY(-2px);
+      }
+
+      .visual {
+        position: relative;
+        margin-top: 3rem;
+        padding: 1.5rem 1.5rem 2.5rem;
+      }
+      .layer {
+        transition: translate 250ms ease-out;
+        animation: rise 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+
+      .browser {
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 24px 48px -24px rgba(0, 0, 238, 0.35);
+        overflow: hidden;
+      }
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        background: rgba(0, 0, 0, 0.03);
+      }
+      .bar > span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.15);
+      }
+      .url {
+        margin-left: 12px;
+        padding: 3px 10px;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.55);
+      }
+      .page {
+        padding: 1.5rem;
+      }
+      .line {
+        height: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background: rgba(0, 0, 0, 0.08);
+        transform-origin: left;
+        animation: grow 500ms ease-out both;
+        animation-delay: 250ms;
+      }
+      .line.h {
+        width: 55%;
+        height: 18px;
+        background: #000;
+        animation-delay: 150ms;
+      }
+      .line.short {
+        width: 70%;
+        animation-delay: 350ms;
+      }
+      .btn {
+        width: 84px;
+        height: 24px;
+        margin: 1rem 0 1.5rem;
+        border-radius: 999px;
+        background: #0000ee;
+        animation: rise 400ms ease-out both;
+        animation-delay: 450ms;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .grid > div {
+        aspect-ratio: 4 / 3;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(0, 0, 238, 0.14), rgba(0, 0, 238, 0.04));
+        animation: rise 400ms ease-out both;
+      }
+      .grid > div:nth-child(1) { animation-delay: 500ms; }
+      .grid > div:nth-child(2) { animation-delay: 560ms; }
+      .grid > div:nth-child(3) { animation-delay: 620ms; }
+
+      .chat {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 14px;
+        background: #000;
+        color: #fff;
+        font-size: 14px;
+        box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.5);
+        animation-name: from-left;
+        animation-delay: 300ms;
+      }
+      .chat p {
+        margin: 0;
+      }
+      .avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #0000ee;
+      }
+
+      .status {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 999px;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.35);
+        animation-name: from-right;
+        animation-delay: 550ms;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #0000ee;
+      }
+
+      @keyframes rise {
+        from { transform: translateY(16px); }
+      }
+      @keyframes grow {
+        from { transform: scaleX(0.2); }
+      }
+      @keyframes from-left {
+        from { transform: translateX(-24px); }
+      }
+      @keyframes from-right {
+        from { transform: translateX(24px); }
+      }
+
+      @media (max-width: 480px) {
+        .visual {
+          padding: 1.25rem 0.5rem 2.25rem;
+        }
+        .page {
+          padding: 1rem;
+        }
+        .chat {
+          font-size: 13px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .layer,
+        .line,
+        .btn,
+        .grid > div,
+        .cta {
+          animation: none;
+          transition: none;
+        }
+      }
+    </style>
   </body>
 </html>
