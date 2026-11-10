@@ -1,5 +1,7 @@
 ---
 const titolo = 'Sito di prova';
+const parole = titolo.split(' ');
+let indice = 0;
 ---
 <html lang="it">
   <head>
@@ -9,10 +11,25 @@ const titolo = 'Sito di prova';
   </head>
   <body>
     <section class="hero">
-      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__glow" aria-hidden="true">
+        <span class="hero__blob hero__blob--a"></span>
+        <span class="hero__blob hero__blob--b"></span>
+        <span class="hero__blob hero__blob--c"></span>
+      </div>
       <div class="hero__inner">
         <p class="hero__eyebrow">Daytwo · prova</p>
-        <h1 class="hero__title">{titolo}</h1>
+        <h1 class="hero__title" aria-label={titolo}>
+          {parole.map((parola, p) => (
+            <>
+              <span class="hero__word" aria-hidden="true">
+                {parola.split('').map((lettera) => (
+                  <span class="hero__letter" style={`--i: ${indice++}`}>{lettera}</span>
+                ))}
+              </span>
+              {p < parole.length - 1 && ' '}
+            </>
+          ))}
+        </h1>
         <p class="hero__lead">Una pagina sola, per provare Daytwo.</p>
         <a class="hero__cta" href="mailto:hello@example.com">
           Scrivici
@@ -45,12 +62,69 @@ const titolo = 'Sito di prova';
   .hero__glow {
     position: absolute;
     inset: -20%;
-    background:
-      radial-gradient(40% 40% at 30% 35%, rgba(0, 0, 238, 0.28), transparent 70%),
-      radial-gradient(35% 35% at 70% 65%, rgba(0, 0, 238, 0.16), transparent 70%);
-    filter: blur(40px);
-    animation: drift 18s ease-in-out infinite alternate;
+    filter: blur(50px);
+    transform: translate(var(--mx, 0px), var(--my, 0px));
+    transition: transform 0.6s ease-out;
   }
+
+  .hero__blob {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 0, 238, 0.32), transparent 70%);
+  }
+
+  .hero__blob--a {
+    width: 45%;
+    aspect-ratio: 1;
+    top: 20%;
+    left: 15%;
+    animation: orbit-a 14s ease-in-out infinite alternate;
+  }
+
+  .hero__blob--b {
+    width: 38%;
+    aspect-ratio: 1;
+    top: 40%;
+    left: 50%;
+    opacity: 0.7;
+    animation: orbit-b 11s ease-in-out infinite alternate;
+  }
+
+  .hero__blob--c {
+    width: 28%;
+    aspect-ratio: 1;
+    top: 10%;
+    left: 60%;
+    opacity: 0.5;
+    animation: orbit-c 9s ease-in-out infinite alternate;
+  }
+
+  .hero__word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .hero__letter {
+    display: inline-block;
+    animation: letter-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    animation-delay: calc(var(--i) * 45ms);
+    transition: transform 0.25s ease-out, color 0.25s ease-out;
+  }
+
+  .hero__letter:hover {
+    transform: translateY(-0.08em) rotate(-4deg);
+    color: #0000ee;
+  }
+
+  .hero__eyebrow,
+  .hero__lead,
+  .hero__cta {
+    animation: fade-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+
+  .hero__eyebrow { animation-delay: 0.1s; }
+  .hero__lead { animation-delay: 0.55s; }
+  .hero__cta { animation-delay: 0.7s; }
 
   .hero__inner {
     position: relative;
@@ -87,6 +161,8 @@ const titolo = 'Sito di prova';
   }
 
   .hero__cta {
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -112,18 +188,76 @@ const titolo = 'Sito di prova';
     transform: translateX(4px);
   }
 
+  .hero__cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+    transform: translateX(-120%);
+  }
+
+  .hero__cta:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.6s ease-out;
+  }
+
   .hero__cta:focus-visible {
     outline: 3px solid #000;
     outline-offset: 3px;
   }
 
-  @keyframes drift {
-    from { transform: translate(-3%, -2%) scale(1); }
-    to { transform: translate(3%, 2%) scale(1.08); }
+  @keyframes orbit-a {
+    from { transform: translate(-10%, -5%) scale(1); }
+    to { transform: translate(15%, 10%) scale(1.15); }
+  }
+
+  @keyframes orbit-b {
+    from { transform: translate(10%, 5%) scale(1.1); }
+    to { transform: translate(-20%, -10%) scale(0.9); }
+  }
+
+  @keyframes orbit-c {
+    from { transform: translate(0, 0) scale(0.9); }
+    to { transform: translate(-25%, 30%) scale(1.2); }
+  }
+
+  @keyframes letter-in {
+    from { transform: translateY(0.35em) rotate(6deg); }
+    to { transform: none; }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__glow { animation: none; }
-    .hero__cta, .hero__cta span { transition: none; }
+    .hero__glow,
+    .hero__blob,
+    .hero__letter,
+    .hero__eyebrow,
+    .hero__lead,
+    .hero__cta,
+    .hero__cta span,
+    .hero__cta::after {
+      animation: none;
+      transition: none;
+    }
   }
 </style>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('.hero');
+  const glow = document.querySelector<HTMLElement>('.hero__glow');
+  const ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (hero && glow && !ridotto && window.matchMedia('(hover: hover)').matches) {
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      glow.style.setProperty('--mx', `${x * 60}px`);
+      glow.style.setProperty('--my', `${y * 60}px`);
+    });
+  }
+</script>
