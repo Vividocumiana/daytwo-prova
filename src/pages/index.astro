@@ -1,11 +1,13 @@
 ---
 const titolo = 'Sito di prova';
+const descrizione = 'Sito di prova: una pagina sola, costruita con Astro per provare Daytwo. Leggi le poche righe e scrivici se hai domande o vuoi dirci qualcosa.';
 ---
 <html lang="it">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titolo}</title>
+    <meta name="description" content={descrizione} />
   </head>
   <body style="font-family: system-ui, sans-serif; max-width: 640px; margin: 4rem auto; padding: 0 1rem;">
     <h1>{titolo}</h1>
